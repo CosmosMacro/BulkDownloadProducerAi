@@ -34,6 +34,7 @@ export async function downloadTrack(generation, token, outputDir, format = 'mp3'
     const response = await fetch(url, {
       headers: {
         'Authorization': `Bearer ${token}`,
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
       },
     });
 

@@ -123,7 +123,7 @@ async function main() {
             } else if (result.status === 'failed') {
               stats.failed++;
               state.failed.push(generation.id);
-              console.log(`❌ ${result.file}`);
+              console.log(`❌ ${result.file} - ${result.message}`);
             }
 
             // Save state every 10 tracks
