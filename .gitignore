@@ -1,1 +1,10 @@
 audio/
+node_modules/
+config.json
+download-state.json
+downloads/
+*.log
+.DS_Store
+.env
+.env.local
+package-lock.json

@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm install:*)",
+      "Bash(node investigate-auth.js:*)",
+      "Bash(npx playwright install)",
+      "Bash(node --check:*)",
+      "Bash(dir:*)",
+      "Bash(echo:*)",
+      "Bash(git add:*)"
+    ]
+  }
+}

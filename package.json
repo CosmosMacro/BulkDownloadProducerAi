@@ -1,0 +1,15 @@
+{
+  "name": "bulk-download-producer-ai",
+  "version": "1.0.0",
+  "description": "Bulk download music from producer.ai with Discord OAuth authentication",
+  "type": "module",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "node src/index.js"
+  },
+  "dependencies": {
+    "playwright": "^1.57.0",
+    "sanitize-filename": "^1.6.3"
+  }
+}
