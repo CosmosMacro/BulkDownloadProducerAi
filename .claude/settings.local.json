@@ -7,7 +7,12 @@
       "Bash(node --check:*)",
       "Bash(dir:*)",
       "Bash(echo:*)",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(git commit -m \"$\\(cat <<''EOF''\nPhase 2: Complete MVP implementation with Discord OAuth authentication\n\nArchitecture:\n- Discord OAuth via Playwright for JWT Bearer token acquisition\n- Token validation and persistence in config.json\n- Stateful pagination with crash recovery via download-state.json\n- Atomic file operations using .downloading pattern\n- Retry logic with exponential backoff \\(max 2 attempts\\)\n- Automatic cleanup of orphaned incomplete downloads\n\nCore modules:\n- src/auth-discord.js: Discord OAuth flow, token extraction, config management\n- src/index.js: Main orchestrator \\(auth → validate → setup → download loop → summary\\)\n- src/api.js: API communication \\(fetchGenerations, getDownloadUrl, getUserInfo\\)\n- src/downloader.js: Download logic with .downloading pattern and retry wrapper\n- src/state.js: State persistence for pagination resume and failed track tracking\n- src/utils.js: Filename sanitization utility\n\nState tracking:\n- lastOffset: Resume pagination from last batch\n- downloaded/skipped/failed: Statistics tracking\n- failed[]: Array of failed generation IDs for retry\n\nProduction-ready features:\n- Idempotent execution: can re-run safely at any time\n- Skip existing files by size verification\n- Clean up incomplete .downloading files on startup\n- Progressive state saves every 10 tracks\n- Reset state on complete success for next sync\n\n🤖 Generated with Claude Code\nEOF\n\\)\")",
+      "Bash(npm start)",
+      "Bash(ls:*)",
+      "Bash(cat:*)",
+      "Bash(git commit -m \"$\\(cat <<''EOF''\nFix authentication and API validation issues\n\n- Add User-Agent headers to API calls to avoid WAF blocking\n- Extract user ID from JWT token payload instead of API call\n- Validate token using generations endpoint \\(more reliable than /users/me\\)\n- Improve error diagnostics in validateToken function\n- Successfully tested full auth flow: Discord OAuth → JWT → Config save → Download flow\n\nAll steps now complete:\n✓ Discord OAuth authentication\n✓ Token capture and validation\n✓ User ID extraction from JWT\n✓ Configuration persistence\n✓ Download orchestration \\(0 tracks available in test\\)\n✓ State management\n\n🤖 Generated with Claude Code\nEOF\n\\)\")"
     ]
   }
 }

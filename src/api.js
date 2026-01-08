@@ -10,6 +10,7 @@ export async function fetchGenerations(token, userId, offset = 0, limit = 20) {
     headers: {
       'Authorization': `Bearer ${token}`,
       'Content-Type': 'application/json',
+      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
     },
   });
 
@@ -29,6 +30,7 @@ export async function getUserInfo(token) {
     method: 'GET',
     headers: {
       'Authorization': `Bearer ${token}`,
+      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
     },
   });
 

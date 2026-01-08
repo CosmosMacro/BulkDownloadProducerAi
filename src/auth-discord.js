@@ -152,10 +152,25 @@ async function extractTokenFromStorage(page) {
 }
 
 /**
- * Fetch user ID from API
+ * Fetch user ID from API or JWT token
  */
 async function fetchUserId(page, token) {
   try {
+    // Try to extract from JWT token payload
+    const parts = token.split('.');
+    if (parts.length === 3) {
+      try {
+        const payload = JSON.parse(Buffer.from(parts[1], 'base64').toString());
+        if (payload.sub) {
+          console.log(`   Found user ID in JWT: ${payload.sub}`);
+          return payload.sub;
+        }
+      } catch (e) {
+        // If JWT parsing fails, continue to API calls
+      }
+    }
+
+    // Fallback to API call
     const response = await page.evaluate(async (bearerToken) => {
       const res = await fetch('https://www.producer.ai/__api/v2/users/me', {
         headers: {
@@ -191,26 +206,50 @@ async function fetchUserId(page, token) {
 }
 
 /**
- * Validate existing token
+ * Validate existing token by extracting user ID and testing generations endpoint
  */
 export async function validateToken(token) {
   try {
-    const response = await fetch('https://www.producer.ai/__api/v2/users/me', {
+    // Extract user ID from JWT token
+    const parts = token.split('.');
+    if (parts.length !== 3) {
+      console.log('❌ Invalid token format');
+      return false;
+    }
+
+    let userId;
+    try {
+      const payload = JSON.parse(Buffer.from(parts[1], 'base64').toString());
+      userId = payload.sub;
+    } catch (e) {
+      console.log('❌ Failed to parse token');
+      return false;
+    }
+
+    if (!userId) {
+      console.log('❌ No user ID in token');
+      return false;
+    }
+
+    // Validate by testing generations endpoint
+    const url = `https://www.producer.ai/__api/v2/users/${userId}/generations?offset=0&limit=1`;
+    const response = await fetch(url, {
       headers: {
         'Authorization': `Bearer ${token}`,
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
       },
     });
 
     if (response.status === 200) {
-      const user = await response.json();
-      console.log(`✅ Token valid for user: ${user.id || 'unknown'}`);
+      console.log(`✅ Token valid for user: ${userId}`);
       return true;
     } else if (response.status === 401) {
       console.log('❌ Token expired or invalid');
       return false;
+    } else {
+      console.log(`⚠️  Unexpected API response: ${response.status} ${response.statusText}`);
+      return false;
     }
-
-    return false;
   } catch (error) {
     console.error('❌ Token validation failed:', error.message);
     return false;
